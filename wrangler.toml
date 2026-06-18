@@ -1,0 +1,20 @@
+# Cloudflare Workers configuration
+# Replace [PROJECT-NAME] with the actual project name when cloning this template.
+
+name = "[PROJECT-NAME]"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Uncomment and configure as needed per project:
+
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "[PROJECT-NAME]-db"
+# database_id = "YOUR-D1-DATABASE-ID"
+
+# [[r2_buckets]]
+# binding = "ASSETS"
+# bucket_name = "[PROJECT-NAME]-assets"
+
+# [vars]
+# ENVIRONMENT = "production"
