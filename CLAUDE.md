@@ -24,6 +24,7 @@ Read `plans/[project-name]-handoff.md` at the start of every session.
 10. If the wireframe and the PRD conflict, stop and ask Richard. Do not make the call yourself.
 11. If a ticket's scope is ambiguous, ask before building. Do not assume.
 12. Use shadcn/ui CSS variables for all colors (`bg-background`, `text-foreground`, `text-primary`, etc.). Never use raw Tailwind color values like `bg-stone-950`.
+13. If the board has no ticket for what you're being asked to do, stop and say so before building. Do not quietly proceed and flag it afterwards.
 
 ---
 
