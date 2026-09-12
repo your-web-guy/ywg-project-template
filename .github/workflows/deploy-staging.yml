@@ -23,9 +23,9 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Deploy to Cloudflare Pages (Staging)
+      - name: Deploy to Cloudflare Workers (Staging)
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=[PROJECT-NAME]-staging
+          command: deploy --name [PROJECT-NAME]-staging
