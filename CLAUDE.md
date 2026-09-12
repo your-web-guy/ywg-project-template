@@ -10,6 +10,10 @@ Read `plans/[project-name]-handoff.md` at the start of every session.
 
 ---
 
+**Scope note (added Sept 12, 2026):** the rules below govern builds made from this template, client and internal projects alike. They don't govern maintaining this template repo itself. Template fixes commit straight to main on Richard's direction, there's no ticket board or staging pipeline for the template, and there won't be one, it's a scaffold, not a shipping product.
+
+---
+
 ## Working Rules
 
 1. Always work from GitHub issues. Never build what isn't a ticket.
