@@ -19,7 +19,7 @@ not_found_handling = "single-page-application"
 # database_id = "YOUR-D1-DATABASE-ID"
 
 # [[r2_buckets]]
-# binding = "ASSETS"
+# binding = "STORAGE"
 # bucket_name = "[PROJECT-NAME]-assets"
 
 # [vars]
