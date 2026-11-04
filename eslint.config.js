@@ -19,4 +19,14 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    /* File routes export `Route` next to their component; that's how TanStack
+       Router's file-based routing works, and the router plugin handles Fast
+       Refresh for them. Scoped to src/routes so the rule still catches real
+       Fast Refresh problems everywhere else. */
+    files: ['src/routes/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])

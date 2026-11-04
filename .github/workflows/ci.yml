@@ -1,0 +1,33 @@
+name: CI
+
+# Every pull request into dev, staging or main runs the same gates, so nothing
+# reaches a deploy branch unchecked. The job is named `ci` because that's the
+# status check the main and staging rulesets require (setup guide Part 2,
+# Step 3). GitHub only offers a check in the ruleset once it has run.
+on:
+  pull_request:
+    branches: [dev, staging, main]
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      # Build first: `tsc -b` is part of it, so a type error fails here rather
+      # than as a confusing test failure further down.
+      - run: bun run build
+
+      - run: bun run lint
+
+      - run: bun run test
