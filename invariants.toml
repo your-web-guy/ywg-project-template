@@ -1,0 +1,35 @@
+# Invariants: rules the code must never break.
+#
+# Every entry is checkable. If you can't write an assertion for it, it belongs
+# in the PRD, ARD or DDD, not here. Drafted in Cowork (setup guide Part 1, P7)
+# from the DDD and PRD, then copied here in Part 3, Step 7, replacing this file.
+#
+# tests/invariants/invariants.test.ts checks this file's shape on every run:
+#   - id        "INV-001" style, unique
+#   - rule      the rule in plain words
+#   - check     what the test asserts
+#   - refs      where the rule comes from (DDD, PRD, ADR)
+#   - status    "todo" | "in_progress" | "implemented" | "deprecated"
+#   - test      the test file that enforces it, required once "implemented";
+#               that file must mention the id
+#   - current   retrofit only: "holds" | "violated" | "unknown"
+#
+# An entry that isn't "implemented" skips with a printed reason. It never
+# silently passes.
+#
+# Write dates as quoted strings ("2026-11-04"). Bun's TOML parser rejects
+# bare dates.
+
+[meta]
+project = "[project-name]"
+version = "0.1"
+updated = "YYYY-MM-DD"
+
+# Sample entry. Replace it with the real set from P7.
+[[invariant]]
+id = "INV-001"
+rule = "The staging site is never indexed by search engines."
+check = "Every response from the staging Worker carries X-Robots-Tag: noindex."
+refs = ["Setup guide Part 2, Step 6"]
+status = "todo"
+test = ""

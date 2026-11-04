@@ -6,7 +6,7 @@
 **Repo:** your-web-guy/[project-name]
 **Board:** [GitHub Project board URL]
 
-Read `plans/[project-name]-handoff.md` at the start of every session.
+Read `plans/handoff.md` at the start of every session.
 
 ---
 
@@ -65,4 +65,4 @@ docs/           ← PRD and implementation plan
 
 At the start of every build session:
 
-> "Read plans/[project-name]-handoff.md. Then look at the [Client] Build GitHub Project board and find the next open ticket in Backlog. Check its wave assignment — confirm all Wave 0 tickets are done before picking up a Wave 1 ticket. Move the ticket to In Progress and build it."
+> "Read plans/handoff.md. Then look at the [Client] Build GitHub Project board and find the next open ticket in Backlog. Check its wave assignment — confirm all Wave 0 tickets are done before picking up a Wave 1 ticket. Move the ticket to In Progress and build it."
