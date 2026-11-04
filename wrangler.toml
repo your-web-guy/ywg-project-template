@@ -1,5 +1,14 @@
 # Cloudflare Workers configuration
-# Replace [PROJECT-NAME] with the actual project name when cloning this template.
+# scripts/provision.sh fills in [PROJECT-NAME] (setup guide Part 2, Step 4).
+#
+# Production deploys the top level of this file (`wrangler deploy`, from
+# deploy-production.yml). Staging deploys [env.staging] (`wrangler deploy
+# --env staging`, from deploy-staging.yml): a separate Worker with its own
+# bindings, so staging can never write to production data.
+#
+# Bindings and vars are NOT inherited by [env.staging]. Anything added to the
+# top level must be repeated in the staging block, pointing at a staging
+# resource.
 
 name = "[PROJECT-NAME]"
 compatibility_date = "2024-09-23"
@@ -11,12 +20,19 @@ compatibility_flags = ["nodejs_compat"]
 directory = "./dist"
 not_found_handling = "single-page-application"
 
-# Uncomment and configure as needed per project:
+# Uncomment and configure as needed per project (Part 2, Step 4.3). Each
+# resource needs a production and a staging copy:
+#   bunx wrangler d1 create [PROJECT-NAME]-db --location wnam
+#   bunx wrangler d1 create [PROJECT-NAME]-staging-db --location wnam
+#   bunx wrangler r2 bucket create [PROJECT-NAME]-assets
+#   bunx wrangler r2 bucket create [PROJECT-NAME]-staging-assets
+# Keep the R2 binding named STORAGE; ASSETS is reserved for static assets.
 
 # [[d1_databases]]
 # binding = "DB"
 # database_name = "[PROJECT-NAME]-db"
 # database_id = "YOUR-D1-DATABASE-ID"
+# migrations_dir = "migrations"
 
 # [[r2_buckets]]
 # binding = "STORAGE"
@@ -24,3 +40,23 @@ not_found_handling = "single-page-application"
 
 # [vars]
 # ENVIRONMENT = "production"
+
+[env.staging]
+name = "[PROJECT-NAME]-staging"
+
+[env.staging.assets]
+directory = "./dist"
+not_found_handling = "single-page-application"
+
+# [[env.staging.d1_databases]]
+# binding = "DB"
+# database_name = "[PROJECT-NAME]-staging-db"
+# database_id = "YOUR-STAGING-D1-DATABASE-ID"
+# migrations_dir = "migrations"
+
+# [[env.staging.r2_buckets]]
+# binding = "STORAGE"
+# bucket_name = "[PROJECT-NAME]-staging-assets"
+
+# [env.staging.vars]
+# ENVIRONMENT = "staging"
