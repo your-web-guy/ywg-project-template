@@ -12,7 +12,8 @@
 # What it doesn't do:
 #   - Mint the API token. Cloudflare has no CLI for that, so it's one dashboard
 #     step: My Profile -> API Tokens -> Create Token -> "Edit Cloudflare Workers".
-#   - Create D1 or R2. That's a per-project decision (Part 2, Step 4.3).
+#   - Create D1 or R2. That's a per-project decision (Part 2, Step 4.3), and
+#     each needs a production and a staging copy (see wrangler.toml).
 #   - Deploy. Deploys only happen through GitHub Actions: merge to `staging`
 #     for staging, to `main` for production. Never run `wrangler deploy` by hand.
 #     The Worker is created by its first deploy; there's no dashboard project.
@@ -96,8 +97,13 @@ done
 echo ""
 echo "== 4. Cloudflare API token =="
 echo "If you don't have one for this project yet:"
-echo "  dash.cloudflare.com -> My Profile -> API Tokens -> Create Token -> \"Edit Cloudflare Workers\""
-echo "  Name it \"${PROJECT_NAME} Edit Cloudflare Workers\". Cloudflare shows it only once."
+echo "  dash.cloudflare.com -> My Profile -> API Tokens -> Create Token -> \"Edit Cloudflare Workers\" -> Use template"
+echo "  Name it \"${PROJECT_NAME} Edit Cloudflare Workers\"."
+echo "  Permissions: keep the template's rows, then + Add more: Account -> D1 -> Edit."
+echo "    (Workers R2 Storage: Edit is already in the template; a second R2 row can't be set to Edit.)"
+echo "  Account Resources: Include -> your account."
+echo "  Zone Resources: Include -> All zones from an account -> your account, so a domain added later is covered."
+echo "  No IP filtering, no expiry. Cloudflare shows the token only once: save it in 1Password."
 read -r -s -p "Paste the API token (input hidden, Enter to skip): " CF_API_TOKEN
 echo ""
 
@@ -114,6 +120,7 @@ unset CF_API_TOKEN
 
 echo ""
 echo "Done. Next:"
-echo "  1. If D1 or R2 is needed, uncomment the block in wrangler.toml and create it (Part 2, Step 4.3)."
+echo "  1. If D1 or R2 is needed (Part 2, Step 4.3), create a production AND a staging copy with the"
+echo "     commands in wrangler.toml's comments, then uncomment both blocks and paste in the IDs."
 echo "  2. Commit wrangler.toml and the deploy workflows on dev."
 echo "  3. The first deploy happens when dev is merged into staging (Part 2, Step 6)."
