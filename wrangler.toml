@@ -11,14 +11,24 @@
 # resource.
 
 name = "[PROJECT-NAME]"
+main = "src/worker.ts"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
 # Static assets from the Vite build. SPA fallback serves index.html for
 # client-side routes (TanStack Router) instead of returning 404.
+#
+# run_worker_first sends every request except the hashed /assets/* bundle
+# through src/worker.ts, which rewrites each HTML page's <head> with that
+# route's title, description, canonical and social card (src/services/seo.ts).
+# Without it, static files are served before the Worker runs and every page
+# previews with the same generic shell. Globs and "!" exclusions need wrangler
+# 4.120+, which package.json and both deploy workflows pin.
 [assets]
 directory = "./dist"
+binding = "ASSETS"
 not_found_handling = "single-page-application"
+run_worker_first = ["/*", "!/assets/*"]
 
 # Uncomment and configure as needed per project (Part 2, Step 4.3). Each
 # resource needs a production and a staging copy:
@@ -44,9 +54,13 @@ not_found_handling = "single-page-application"
 [env.staging]
 name = "[PROJECT-NAME]-staging"
 
+# Not inherited: this block replaces the top-level [assets] rather than
+# merging with it. Keep it identical, or staging silently loses the SEO rewrite.
 [env.staging.assets]
 directory = "./dist"
+binding = "ASSETS"
 not_found_handling = "single-page-application"
+run_worker_first = ["/*", "!/assets/*"]
 
 # [[env.staging.d1_databases]]
 # binding = "DB"

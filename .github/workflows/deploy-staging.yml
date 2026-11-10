@@ -28,4 +28,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Pinned: run_worker_first globs in wrangler.toml need 4.120+. Keep in step with package.json.
+          wranglerVersion: '4.120.0'
           command: deploy --env staging

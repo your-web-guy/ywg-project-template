@@ -1,0 +1,39 @@
+{
+  /* src/worker.ts needs the Workers runtime types (HTMLRewriter, Fetcher,
+     ExportedHandler) and the app doesn't. They can't share a config:
+     @cloudflare/workers-types redeclares Request, Response and fetch, which
+     clashes with "DOM" in tsconfig.app.json.
+
+     No "DOM" in lib here, on purpose: a Worker file that reaches for
+     `document` or `window` fails to compile instead of failing at the edge. */
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.worker.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023"],
+    "module": "esnext",
+    "types": ["@cloudflare/workers-types"],
+    "skipLibCheck": true,
+
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    /* Bundler mode, matched to tsconfig.app.json so shared files (seo.ts)
+       are checked the same way in both. */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  /* The entry point only. TypeScript follows its imports, so the Worker is
+     checked against exactly the modules it reaches, and a stray import of a
+     browser-only module becomes a build error. */
+  "include": ["src/worker.ts"]
+}

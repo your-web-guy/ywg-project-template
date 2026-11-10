@@ -5,7 +5,9 @@
 #
 # What it does:
 #   1. Confirms wrangler and gh are logged in, and finds the Cloudflare account ID.
-#   2. Fills the [PROJECT-NAME] placeholder in wrangler.toml and both deploy workflows.
+#   2. Fills the [PROJECT-NAME] placeholder in wrangler.toml, both deploy workflows,
+#      src/services/seo.ts and index.html, and [DOMAIN] (the production domain)
+#      in the last two.
 #   3. Makes sure the GitHub environments `staging` and `production` exist.
 #   4. Pushes CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID to both environments.
 #
@@ -21,7 +23,8 @@
 # Usage, from the repo root:
 #   ./scripts/provision.sh [project-name]
 #
-# Set CF_ACCOUNT_ID to skip account detection. Safe to re-run.
+# Set CF_ACCOUNT_ID to skip account detection, PROJECT_DOMAIN to skip the
+# domain prompt. Safe to re-run.
 
 set -euo pipefail
 
@@ -78,7 +81,9 @@ echo "Cloudflare account: $ACCOUNT_ID"
 
 echo ""
 echo "== 2. Fill in the project name =="
-for f in wrangler.toml .github/workflows/deploy-staging.yml .github/workflows/deploy-production.yml; do
+NAME_FILES=(wrangler.toml .github/workflows/deploy-staging.yml .github/workflows/deploy-production.yml
+  src/services/seo.ts index.html)
+for f in "${NAME_FILES[@]}"; do
   if [[ -f "$f" ]] && grep -q '\[PROJECT-NAME\]' "$f"; then
     perl -pi -e "s/\\[PROJECT-NAME\\]/${PROJECT_NAME}/g" "$f"
     echo "Updated $f"
@@ -86,6 +91,26 @@ for f in wrangler.toml .github/workflows/deploy-staging.yml .github/workflows/de
 done
 grep -q "^name = \"${PROJECT_NAME}\"" wrangler.toml \
   || echo "Warning: wrangler.toml's name isn't \"${PROJECT_NAME}\". Check it before the first deploy."
+
+echo ""
+echo "== 2b. Fill in the production domain =="
+# The canonical and og:url on every page point here, on staging too, so it's
+# the domain the site will live on, not the workers.dev URL.
+DOMAIN_FILES=(src/services/seo.ts index.html)
+if grep -q '\[DOMAIN\]' "${DOMAIN_FILES[@]}" 2>/dev/null; then
+  DOMAIN="${PROJECT_DOMAIN:-}"
+  [[ -z "$DOMAIN" ]] && read -r -p "Production domain, no https:// (e.g. example.com; Enter to skip): " DOMAIN
+  if [[ -z "$DOMAIN" ]]; then
+    echo "Skipped. [DOMAIN] is still in ${DOMAIN_FILES[*]}: fill it before the first deploy."
+  elif [[ ! "$DOMAIN" =~ ^[a-z0-9]([a-z0-9.-]*[a-z0-9])?\.[a-z]{2,}$ ]]; then
+    echo "\"$DOMAIN\" doesn't look like a bare domain. Re-run, or fill [DOMAIN] by hand."
+  else
+    perl -pi -e "s/\\[DOMAIN\\]/${DOMAIN}/g" "${DOMAIN_FILES[@]}"
+    echo "Set the production domain to ${DOMAIN}"
+  fi
+else
+  echo "Already filled."
+fi
 
 echo ""
 echo "== 3. GitHub environments =="
@@ -122,5 +147,8 @@ echo ""
 echo "Done. Next:"
 echo "  1. If D1 or R2 is needed (Part 2, Step 4.3), create a production AND a staging copy with the"
 echo "     commands in wrangler.toml's comments, then uncomment both blocks and paste in the IDs."
-echo "  2. Commit wrangler.toml and the deploy workflows on dev."
-echo "  3. The first deploy happens when dev is merged into staging (Part 2, Step 6)."
+echo "  2. Write each route's title and description in src/services/seo.ts (and the"
+echo "     home page's in index.html) from the approved route inventory, and add the"
+echo "     1200x630 social card at public/og/${PROJECT_NAME}.png."
+echo "  3. Commit wrangler.toml, the deploy workflows, seo.ts and index.html on dev."
+echo "  4. The first deploy happens when dev is merged into staging (Part 2, Step 6)."
