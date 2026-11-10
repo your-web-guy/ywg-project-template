@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { staticRouteHead } from '@/services/seo'
 
 export const Route = createFileRoute('/')({
+  head: () => staticRouteHead('/'),
   component: Index,
 })
 

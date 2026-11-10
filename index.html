@@ -4,7 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ywg-project-template</title>
+
+    <!-- Fallback card for any URL src/services/seo.ts doesn't resolve. On known
+         routes src/worker.ts replaces these; in the browser src/main.tsx removes
+         everything marked data-shell-meta once the router renders its own.
+         Keep in step with ROUTE_META['/'] in src/services/seo.ts. -->
+    <meta data-shell-meta name="description" content="[Home page description, ~150–160 characters, written for this page.]" />
+    <meta data-shell-meta property="og:type" content="website" />
+    <meta data-shell-meta property="og:site_name" content="[PROJECT-NAME]" />
+    <meta data-shell-meta property="og:title" content="[PROJECT-NAME]" />
+    <meta data-shell-meta property="og:image" content="https://[DOMAIN]/og/[PROJECT-NAME].png" />
+    <meta data-shell-meta property="og:image:width" content="1200" />
+    <meta data-shell-meta property="og:image:height" content="630" />
+    <meta data-shell-meta name="twitter:card" content="summary_large_image" />
+    <meta data-shell-meta name="twitter:image" content="https://[DOMAIN]/og/[PROJECT-NAME].png" />
+    <title data-shell-meta>[PROJECT-NAME]</title>
   </head>
   <body>
     <div id="root"></div>

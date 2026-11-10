@@ -26,5 +26,8 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  /* src/worker.ts is checked by tsconfig.worker.json instead: it needs the
+     Workers runtime types, which can't coexist with "DOM" in one config. */
+  "include": ["src"],
+  "exclude": ["src/worker.ts"]
 }

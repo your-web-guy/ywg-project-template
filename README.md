@@ -42,7 +42,17 @@ Vitest runs everything under `src/**/*.test.{ts,tsx}` and `tests/`. CI (`.github
 ./scripts/provision.sh [project-name]
 ```
 
-Fills in the project name, creates the `staging` and `production` GitHub environments, and pushes the Cloudflare secrets to both. Deploys only happen through GitHub Actions; never run `wrangler deploy` by hand.
+Fills in the project name and production domain, creates the `staging` and `production` GitHub environments, and pushes the Cloudflare secrets to both. Deploys only happen through GitHub Actions; never run `wrangler deploy` by hand.
+
+## Per-page SEO
+
+Fill in `src/services/seo.ts` from the approved route inventory: one `ROUTE_META` entry per route, and `head: () => staticRouteHead('/path')` in each route file. Keep the defaults in `index.html` in step with the home page entry, and add the 1200×630 social card at `public/og/[project-name].png`.
+
+`src/worker.ts` writes each route's title, description, canonical and social card into the HTML before it leaves Cloudflare, so link previews and non-JavaScript crawlers see the right page. After a deploy, check any route with:
+
+```bash
+curl -s https://[project-name]-staging.[account].workers.dev/about | grep canonical
+```
 
 ## Adding Components
 

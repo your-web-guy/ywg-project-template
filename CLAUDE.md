@@ -29,6 +29,7 @@ Read `plans/handoff.md` at the start of every session.
 11. If a ticket's scope is ambiguous, ask before building. Do not assume.
 12. Use shadcn/ui CSS variables for all colors (`bg-background`, `text-foreground`, `text-primary`, etc.). Never use raw Tailwind color values like `bg-stone-950`.
 13. If the board has no ticket for what you're being asked to do, stop and say so before building. Do not quietly proceed and flag it afterwards.
+14. Where `docs/approach.md` says buy or borrow, integrate it. Don't rebuild it.
 
 ---
 
@@ -52,6 +53,8 @@ src/
   components/   ← shared UI components
   components/ui ← shadcn/ui components (do not edit directly)
   services/     ← shared reusable mechanics (Code-Structure layer)
+  services/seo.ts ← per-route title, description, canonical, social card
+  worker.ts     ← Cloudflare Worker: serves assets, rewrites each page's <head>
   lib/          ← utilities (cn(), etc.)
   hooks/        ← shared React hooks
 plans/          ← Claude Code handoff document
